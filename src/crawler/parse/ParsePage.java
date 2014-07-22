@@ -3,15 +3,22 @@ package crawler.parse;
 import java.util.ArrayList;
 
 import org.htmlparser.Node;
+import org.htmlparser.NodeFilter;
+import org.htmlparser.filters.TagNameFilter;
+import org.htmlparser.tags.ImageTag;
 import org.htmlparser.tags.LinkTag;
 import org.htmlparser.visitors.ObjectFindingVisitor;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.htmlparser.Parser;
+import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 
+import crawler.Database.Database;
 import crawler.Download.GetUrlFromHbase;
+import crawler.others.ChineseToUtf8;
+import crawler.others.CrawlerConfiguration;
 import crawler.others.DebugFunctions;
 
 public class ParsePage {
@@ -50,6 +57,63 @@ public class ParsePage {
 	    }
 	    return stringArray;
 	}
+	public static String getTitle(String page) throws ParserException{
+		String result="";
+		Parser parser = new Parser(page);
+		if(page==null){
+			return result;
+		}
+	    parser.setEncoding(parser.getEncoding());
+        NodeFilter filter = new TagNameFilter ("title");
+        NodeList nodes = parser.extractAllNodesThatMatch(filter); 
+    	//System.out.println(nodes.size());
+        if(nodes.size()>0){
+        	result=nodes.elementAt(0).toPlainTextString();
+        	//System.out.println(nodes.elementAt(i).toPlainTextString());
+        }
+        return result;
+	}
+	public static ArrayList<String>getImageUrl(String page) throws ParserException{
+		ArrayList<String>imageUrlArray=new ArrayList<String>();
+		if(page==null){
+			return imageUrlArray;
+		}
+		Parser parser = new Parser(page);
+	    parser.setEncoding(parser.getEncoding());
+        NodeFilter filter = new TagNameFilter ("img");
+        NodeList nodes = parser.extractAllNodesThatMatch(filter); 
+        ImageTag imageTag;
+        for(int i=0;i<nodes.size();i++){
+        	imageTag=(ImageTag)nodes.elementAt(i);
+        	if(isMatch(imageTag.getAttribute("src"))){
+        		imageUrlArray.add(imageTag.getAttribute("src"));
+        	}
+        	//System.out.println(nodes.elementAt(i).());
+//        	nodes.elementAt(i)
+        }
+		return imageUrlArray;
+	}
+	public static ArrayList<String>getUrl(String page) throws ParserException{
+
+		ArrayList<String>urlArray=new ArrayList<String>();
+		if(page==null){
+			return urlArray;
+		}
+		Parser parser = new Parser(page);
+	    parser.setEncoding(parser.getEncoding());
+        NodeFilter filter = new TagNameFilter ("a");
+        NodeList nodes = parser.extractAllNodesThatMatch(filter);
+        LinkTag linkTag;
+        String url="";
+        for(int i=0;i<nodes.size();i++){
+        	linkTag=(LinkTag)nodes.elementAt(i);
+        	url=linkTag.getLink();
+        	if(isMatch(url)){
+        		urlArray.add(url);
+        	}
+        }
+		return urlArray;
+	}
 	public static boolean isMatch(String urlString){
 		Pattern patt = Pattern.compile(regex);
         Matcher matcher = patt.matcher(urlString);
@@ -77,7 +141,16 @@ public class ParsePage {
 		}
 		return result;
 	}
+
 	/*
+	public static void main(String args[]) throws Exception{
+		Database.showAllRecord(CrawlerConfiguration.UrlTableName);
+		String temp=Database.getSpecificRowColumn(CrawlerConfiguration.WebTableName, 
+				"http://www.amazon.com", CrawlerConfiguration.WebTableContentFamily,
+				CrawlerConfiguration.WebTablePageQualifier);
+		System.out.println(ParsePage.getTitle(temp));
+	}
+	
 	public static void main(String args[]) throws Exception{
 		ArrayList<String>urlArray=GetUrlFromHbase.getDataFromHbase(1, 10);
 		//DebugFunctions.showArray(urlArray);

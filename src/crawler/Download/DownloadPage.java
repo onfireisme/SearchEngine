@@ -15,7 +15,8 @@ public class DownloadPage {
 	public static byte [] downloadPage(String url){
 		HttpClient httpClient = new HttpClient();
 		httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
-		GetMethod getMethod=new GetMethod("http://"+url);	 
+		//GetMethod getMethod=new GetMethod("http://"+url);	
+		GetMethod getMethod=new GetMethod(url);	 
 		getMethod.getParams().setParameter(HttpMethodParams.SO_TIMEOUT,5000);
 		  //设置请求重试处理，用的是默认的重试处理：请求三次
 		getMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,

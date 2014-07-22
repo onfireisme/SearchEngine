@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import crawler.Database.Database;
+import crawler.duplicateCheck.SaveValidUrl;
 
 public class SaveInitialUrlToHbase {
 	public static final String rowKey="0";
@@ -34,6 +35,8 @@ public class SaveInitialUrlToHbase {
     	br.close();
     	return strArray;
 	}
+	/*
+	 * 这个函数用不上了，使用saveValidUrl中的存储函数
 	public static void saveToHbase(ArrayList<String>rowKeyArray) throws Exception{
 		//initial the value array
 		ArrayList<String>valueArray=new ArrayList<String>();
@@ -44,34 +47,15 @@ public class SaveInitialUrlToHbase {
 				rowKeyArray, CrawlerConfiguration.StatusFamilyName,
 				CrawlerConfiguration.StatusQualifier, valueArray);
 	}
-	
-	//public static void main(String args[]) throws Exception{
-		/*
-		String[]familys=new String[1];
-		familys[0]=CrawlerConfiguration.StatusFamilyName;
-		Database.creatTable(CrawlerConfiguration.WaitingDownloadUrlTableName, familys);
-		ArrayList<String> strArray=
-				SaveInitialUrlToHbase.readUrlFromTxt(CrawlerConfiguration.initialUrlTxtPath);
-		SaveInitialUrlToHbase.saveToHbase(strArray);
-	
-		SaveInitialUrlToHbase.insertFirstLine(CrawlerConfiguration.WaitingDownloadUrlTableName,
-				CrawlerConfiguration.StatusFamilyName
-				,SaveInitialUrlToHbase.qualifier,CrawlerConfiguration.ReadDefaultStatus); 
-		
-		Database.delRecord(CrawlerConfiguration.WaitingDownloadUrlTableName, "0");
-		ArrayList<Result> resultArray=Database.getSpecifiedRowRecord(CrawlerConfiguration.WaitingDownloadUrlTableName,
-				200);
-		Database.showResultArray(resultArray);
-		ArrayList<String> strArray=
-				SaveInitialUrlToHbase.readUrlFromTxt(CrawlerConfiguration.initialUrlTxtPath);
-		SaveInitialUrlToHbase.saveToHbase(strArray);
-		ArrayList<Result> resultArray=Database.getSpecifiedRowRecord(CrawlerConfiguration.WaitingDownloadUrlTableName,
-				200);
-		Database.showResultArray(resultArray);*/
-		//Database.addFamily(SaveInitialUrlToHbase.Tname, "status");
-		//Database.showAllFamily(SaveInitialUrlToHbase.Tname);
-		//System.out.println(strArray.get(1));
-        //String[] familys = {"grade", "course"};
-		//Database.getAllRecord(CrawlerConfiguration.WaitingDownloadUrlTableName);
-	//}
+	*/
+	/*
+	public static void main(String args[]) throws Exception{
+		//ArrayList<String> strArray=
+		//		SaveInitialUrlToHbase.readUrlFromTxt(CrawlerConfiguration.initialUrlTxtPath);
+		//SaveValidUrl.saveValidUrlToHbase(strArray);
+		//SaveInitialUrlToHbase.saveToHbase(strArray);
+		Database.showAllRecord(CrawlerConfiguration.WaitingDownloadUrlMainTableName);
+		Database.showAllRecord("WDurl1");
+	}
+	*/
 }

@@ -55,8 +55,12 @@ public class Download {
 	public static ThreadPoolExecutor getFixedThreadPool(int threadNumber){
 		 return new ThreadPoolExecutor(threadNumber, threadNumber,0L, TimeUnit.MILLISECONDS,   
 				new LinkedBlockingQueue<Runnable>());   
+	}/*
+	public static void main(String args[]) throws Exception{
+		//Download.download(1);
+		Database.showAllRecord(CrawlerConfiguration.UrlTableName);
 	}
-	/*
+	
 	public static void main(String args[]) throws Exception{
 		//Database.showAllRecord("MDurl");
 		//Download.download(1);

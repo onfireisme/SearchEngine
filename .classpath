@@ -118,5 +118,7 @@
 	<classpathentry kind="lib" path="/home/wangyan/android/hbase/HtmlParserLib/htmllexer.jar"/>
 	<classpathentry kind="lib" path="/home/wangyan/android/hbase/HtmlParserLib/htmlparser.jar"/>
 	<classpathentry kind="lib" path="/home/wangyan/android/hbase/HtmlParserLib/thumbelina.jar"/>
+	<classpathentry kind="lib" path="/home/wangyan/android/hbase/ExtractWordLib/jieba-analysis-1.0.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="/home/wangyan/android/hbase/taggers/stanford-postagger.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

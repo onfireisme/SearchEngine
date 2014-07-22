@@ -85,9 +85,14 @@ public class Database {
 	public static void deleteTable(String tableName) throws Exception {
 		try {
 			HBaseAdmin admin = new HBaseAdmin(conf);
-			admin.disableTable(tableName);
-			admin.deleteTable(tableName);
-			System.out.println("delete table " + tableName + " ok.");
+			if (admin.tableExists(tableName)) {
+				admin.disableTable(tableName);
+				admin.deleteTable(tableName);
+				System.out.println("delete table " + tableName + " ok.");
+			}
+			else{
+				System.out.println("table does not exist!");
+			}
 			admin.close();
 		} catch (MasterNotRunningException e) {
 			e.printStackTrace();

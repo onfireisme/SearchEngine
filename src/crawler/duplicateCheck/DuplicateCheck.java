@@ -38,7 +38,7 @@ public class DuplicateCheck {
 			if(count>=CrawlerConfiguration.MaxRowsGetFromTable){
 				System.out.println("lol");
 				count=0;
-				Database.addMultiRecords(CrawlerConfiguration.ParseUrlTableName,
+				Database.addMultiRecords(CrawlerConfiguration.ParsedUrlTableName,
 						urlArray, 
 						CrawlerConfiguration.DownloadStatusFamilyName, 
 						CrawlerConfiguration.DownloadStatusQualifier, statusArray);
@@ -50,7 +50,7 @@ public class DuplicateCheck {
 		}
 		//System.out.println("lol"+urlArray.size()+"lol1"+statusArray.size());
 		//DebugFunctions.showArray(urlArray);
-		Database.addMultiRecords(CrawlerConfiguration.ParseUrlTableName,
+		Database.addMultiRecords(CrawlerConfiguration.ParsedUrlTableName,
 				urlArray, 
 				CrawlerConfiguration.DownloadStatusFamilyName, 
 				CrawlerConfiguration.DownloadStatusQualifier, statusArray);
@@ -60,7 +60,7 @@ public class DuplicateCheck {
 	}
 
 	public static void saveValidUrl() throws Exception{
-		HTable table = new HTable(Database.getConf(), CrawlerConfiguration.ParseUrlTableName);
+		HTable table = new HTable(Database.getConf(), CrawlerConfiguration.ParsedUrlTableName);
 		Scan s = new Scan();
 		// s.setCaching((CrawlerConfiguration.MaxRowsGetFromTable);
 		ResultScanner ss = table.getScanner(s);
@@ -88,9 +88,11 @@ public class DuplicateCheck {
 		ss.close();
 		table.close();
 	}
+	/*
 	public static void main(String args[]) throws Exception{
 		DuplicateCheck.saveValidUrl();
 		Database.showAllRecord("MDurl");
 		//Database.showAllRecord("url");
 	}
+	*/
 }
