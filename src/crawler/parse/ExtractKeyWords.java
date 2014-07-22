@@ -33,12 +33,27 @@ public class ExtractKeyWords {
 	    }
 	    return result;
 	}
-	public static void taggerEnglishKeyWord(String str,MaxentTagger tagger){
-		str ="test is lol";
+	public static ArrayList<String> taggerEnglishKeyWord(String str,MaxentTagger tagger){
+		//str =" why got names test is lol";
+		ArrayList<String> result=new ArrayList<String>();
+		if(str.equals("")||str==null){
+			return result;
+		}
 		str=tagger.tagString(str);
+		String[] strArray=str.split(" ");
+		
+		String []tempArray=new String[2];
+		System.out.println(str);
+		for(int i=0;i<strArray.length;i++){
+			tempArray=strArray[i].split("_");
+			//System.out.println(tempArray.length);
+			if(tempArray.length>=2&&(tempArray[1].contains("NN")||tempArray[1].contains("VB"))){
+				result.add(tempArray[0]);
+			}
+		}
+		return result;
 		//then we need to process this str
 		//String tagged = tagger.(str);
-		System.out.println(str);
 	}
 	public static MaxentTagger getMaxentTagger(){
 		return new MaxentTagger("taggers/english-bidirectional-distsim.tagger");
@@ -67,7 +82,7 @@ public class ExtractKeyWords {
 	public static void main(String args[]) throws Exception{
 		//String str = new String("暗示大家".getBytes(),"UTF-8");
 //		String str="测试";
-		ExtractKeyWords.english();
+		DebugFunctions.showArray(ExtractKeyWords.taggerEnglishKeyWord("",ExtractKeyWords.getMaxentTagger()));
 		
 	} /**/
 }
