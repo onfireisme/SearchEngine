@@ -1,5 +1,7 @@
 package crawler.parse;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import crawler.Database.Database;
 import crawler.others.CrawlerConfiguration;
@@ -35,19 +37,61 @@ public class SaveParsedUrlToHbase {
 				temp);
 		//Database.addMultiRecords(tableName, rowKeyArray, family, qualifier, valueArray)
 	}
-	public static void saveKeyWord(ArrayList<String> keyWordArray){
+	/*
+	 * 这里假设传入的就是table应该有的名字
+	 * 如果是中文，就是
+	 */
+	public static void saveKeyWord(ArrayList<String> keyWordArray,String url) throws Exception{
 		//每个keyword都创建一个table
 		String []tempArray={CrawlerConfiguration.TempFamilyName};
 		String tableName;
 		for(int i=0;i<keyWordArray.size();i++){
-			/*
-			//首先，创建table
-			Database.creatTable(keyWordArray.get(i), tempArray);
-			Database.addRecord(keyWordArray, rowKey, family, qualifier, value)
-			*/
+			tableName=keyWordArray.get(i);
+			if(isTableNameLegal(tableName)){
+				Database.creatTable(tableName, tempArray);
+				Database.addRecord(tableName,
+						url, CrawlerConfiguration.TempFamilyName,
+						CrawlerConfiguration.TempQualifierName,
+						CrawlerConfiguration.TempValue);
+			}
 		}
 	}
-	public static void saveAllToPageInfo(){
-		
+	public static void saveAllToPageInfo(String url,
+			ArrayList<String> keyWordArray,
+			ArrayList<String> urlArray,
+			ArrayList<String> imageUrlArray){
+		ArrayList<String>qualifierArray=new ArrayList<String>();
+		ArrayList<String>valueArray=new ArrayList<String>();
+		int i=0;
+		String urlString="";
+		for(i=0;i<urlArray.size();i++){
+			urlString=urlString+" "+urlArray.get(i);
+			qualifierArray.add(CrawlerConfiguration.PageInfoUrlQualifier);
+			valueArray.add(urlString);
+		}
+		String imageUrlString="";
+		for(i=0;i<imageUrlArray.size();i++){
+			imageUrlString=imageUrlString+" "+imageUrlArray.get(i);
+			qualifierArray.add(CrawlerConfiguration.PageInfoImageUrlQualifier);
+			valueArray.add(imageUrlString);
+		}
+		String keyWordString="";
+		for(i=0;i<keyWordArray.size();i++){
+			keyWordString=keyWordString+" "+keyWordArray.get(i);
+			qualifierArray.add(CrawlerConfiguration.PageInfoKeyWordQualifier);
+			valueArray.add(keyWordString);
+		}
+		Database.addMultiColumnRecord(CrawlerConfiguration.PageInfoTableName,
+				url, CrawlerConfiguration.PageInfoFamilyName, qualifierArray, 
+				valueArray);
+	}
+	public static boolean isTableNameLegal(String tableName){
+		if(tableName==null||tableName.equals("")){
+			System.out.println("~~~~");
+			return false;
+		}
+		Pattern patt = Pattern.compile("^[a-zA-Z_0-9-.]+$");
+        Matcher matcher = patt.matcher(tableName);
+        return matcher.matches();
 	}
 }

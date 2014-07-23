@@ -9,13 +9,18 @@ import java.util.concurrent.TimeUnit;
 import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.util.Bytes;
 
+import com.huaban.analysis.jieba.JiebaSegmenter;
+
 import crawler.Database.Database;
 import crawler.others.CrawlerConfiguration;
+import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
 public class Parse {
 	//这个函数只需要tableIndex即可
 	public static void  parseMain(int tableIndex) throws IOException{
 		ArrayList<String>urlArray=new ArrayList<String>();
+		JiebaSegmenter segmenter=ExtractKeyWords.getJiebaSegmenter();
+		MaxentTagger tagger=ExtractKeyWords.getMaxentTagger();
 		ThreadPoolExecutor pool = getFixedThreadPool(CrawlerConfiguration.ThreadPoolNumber);
 		while(true){
 			if(pool.getActiveCount()+5<CrawlerConfiguration.ThreadPoolNumber){
@@ -43,7 +48,7 @@ public class Parse {
 					for(int j=0;j<CrawlerConfiguration.ThreadPoolNumber-pool.getActiveCount();
 							j++){
 						if(urlArray.size()!=0){
-							pool.execute(new ParseUrlThread(urlArray.get(0)));
+							pool.execute(new ParseUrlThread(urlArray.get(0),segmenter,tagger));
 							urlArray.remove(0);
 						}
 						else{

@@ -174,6 +174,27 @@ public class Database {
 		}
 	}
 	/*
+	 * 插入多列数据
+	 */
+	public static void addMultiColumnRecord(String tableName,String rowKey,
+			String family,ArrayList<String>qualifierArray,ArrayList<String>valueArray){
+		try {
+			HTable table = new HTable(conf, tableName);
+			Put put = new Put(Bytes.toBytes(rowKey));
+			for(int i=0;i<qualifierArray.size();i++){
+				put.add(Bytes.toBytes(family), Bytes.toBytes(qualifierArray.get(i)),
+						Bytes.toBytes(qualifierArray.get(i)));
+			}
+			
+			table.put(put);
+			System.out.println("insert recored " + rowKey + " to table "
+					+ tableName + " ok.");
+			table.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	/*
 	 * 插入多行记录 第一，插入的多行，其family和qualifier都是相同的
 	 * 第二，是否要直接传入一个put的List，这样就不用传两个arrayList了，问题是put的List有点太大了。
 	 */

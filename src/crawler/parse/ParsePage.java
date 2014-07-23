@@ -1,5 +1,6 @@
 package crawler.parse;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import org.htmlparser.Node;
@@ -15,11 +16,14 @@ import org.htmlparser.Parser;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 
+import com.huaban.analysis.jieba.JiebaSegmenter;
+
 import crawler.Database.Database;
 import crawler.Download.GetUrlFromHbase;
 import crawler.others.ChineseToUtf8;
 import crawler.others.CrawlerConfiguration;
 import crawler.others.DebugFunctions;
+import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
 public class ParsePage {
 	private static final String regex = "\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;\u4e00-\u9fa5]*[-a-zA-Z0-9+&@#/%=~_|]";
@@ -59,10 +63,10 @@ public class ParsePage {
 	}
 	public static String getTitle(String page) throws ParserException{
 		String result="";
-		Parser parser = new Parser(page);
 		if(page==null){
 			return result;
 		}
+		Parser parser = new Parser(page);
 	    parser.setEncoding(parser.getEncoding());
         NodeFilter filter = new TagNameFilter ("title");
         NodeList nodes = parser.extractAllNodesThatMatch(filter); 
@@ -115,6 +119,9 @@ public class ParsePage {
 		return urlArray;
 	}
 	public static boolean isMatch(String urlString){
+		if(urlString==null||urlString.equals("")){
+			return false;
+		}
 		Pattern patt = Pattern.compile(regex);
         Matcher matcher = patt.matcher(urlString);
         return matcher.matches();
@@ -141,7 +148,6 @@ public class ParsePage {
 		}
 		return result;
 	}
-
 	/*
 	public static void main(String args[]) throws Exception{
 		Database.showAllRecord(CrawlerConfiguration.UrlTableName);
