@@ -35,14 +35,17 @@ public class CreateTable {
 		//image的下载模块，跟page下载是差不多的，不过是一个新的模块
 		//第一步，创建image表
 		String[]tempArray={CrawlerConfiguration.ImageTableFamilyName};
+		/*
 		Database.creatTable(CrawlerConfiguration.ImageTableName, tempArray);
 		//第二步，创建image waitingdownload url表，一个主表，然后几个子表
 		tempArray[0]=CrawlerConfiguration.WaitingDownloadImageUrlMainTableFamilyName;
 		Database.creatTable(CrawlerConfiguration.WaitingDownloadImageUrlMainTable,tempArray);
+		*/
 		tempArray[0]=CrawlerConfiguration.TempFamilyName;
 		for(int i=0;i<CrawlerConfiguration.WaitingDownloadImageUrlTableNumber;i++){
-			Database.creatTable(CrawlerConfiguration.WaitingDownloadImageUrlTable+Integer.toString(i+1));
+			Database.creatTable(CrawlerConfiguration.WaitingDownloadImageUrlTable+Integer.toString(i+1),tempArray);
 		}
+		/*
 		//初始化 main table
 		ArrayList<String>rowKeyArray=new ArrayList<String>();
 		ArrayList<String>valueArray=new ArrayList<String>();
@@ -56,10 +59,10 @@ public class CreateTable {
 		//创建表来存储已经下载过的image url
 		tempArray[0]=CrawlerConfiguration.DownloadStatusFamilyName;
 		Database.creatTable(CrawlerConfiguration.DownloadedImageUrlTable, tempArray);
-		
+		*/
 	}
 	public void imageParsedModuleInitial() throws Exception{
-		String[]tempArray={CrawlerConfiguration.StatusFamilyName};
+		String[]tempArray={CrawlerConfiguration.DownloadStatusFamilyName};
 		Database.creatTable(CrawlerConfiguration.ParsedImageUrlTable, tempArray);
 	}
 	public void parseModuleInitial() throws Exception{
@@ -118,14 +121,19 @@ public class CreateTable {
 		Database.deleteTable(CrawlerConfiguration.ParsedUrlTableName);
 		//图片下载模块
 		Database.deleteTable(CrawlerConfiguration.ImageTableName);
-		Database.deleteTable(CrawlerConfiguration.ImageUrlTable);
+		Database.deleteTable(CrawlerConfiguration.DownloadedImageUrlTable);
 		Database.deleteTable(CrawlerConfiguration.WaitingDownloadImageUrlMainTable);
 		for(i=0;i<CrawlerConfiguration.WaitingDownloadUrlTableNumber;i++){
 			Database.deleteTable(CrawlerConfiguration.WaitingDownloadImageUrlTable+String.valueOf(i+1));
 		}
-	}/*
+	}
+
+	/*
 	public static void main(String args[]) throws Exception { 
 		CreateTable ct=new CreateTable();
+		for(int i=0;i<CrawlerConfiguration.WaitingDownloadUrlTableNumber;i++){
+			Database.deleteTable(CrawlerConfiguration.WaitingDownloadImageUrlTable+String.valueOf(i+1));
+		}
 		ct.imageDownloadInitial();
 		Database.showAllTable();
 	}

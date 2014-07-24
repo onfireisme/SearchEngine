@@ -87,10 +87,14 @@ public class ParsePage {
         NodeFilter filter = new TagNameFilter ("img");
         NodeList nodes = parser.extractAllNodesThatMatch(filter); 
         ImageTag imageTag;
+        String url;
         for(int i=0;i<nodes.size();i++){
         	imageTag=(ImageTag)nodes.elementAt(i);
-        	if(isMatch(imageTag.getAttribute("src"))){
-        		imageUrlArray.add(imageTag.getAttribute("src"));
+        	url=imageTag.getAttribute("src");
+        	if(isMatch(url)){
+        		if(isImage(url)){
+        			imageUrlArray.add(url);
+        		}
         	}
         	//System.out.println(nodes.elementAt(i).());
 //        	nodes.elementAt(i)

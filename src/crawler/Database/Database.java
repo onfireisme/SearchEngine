@@ -181,11 +181,14 @@ public class Database {
 		try {
 			HTable table = new HTable(conf, tableName);
 			Put put = new Put(Bytes.toBytes(rowKey));
+			if(qualifierArray.size()==0){
+				table.close();
+				return;
+			}
 			for(int i=0;i<qualifierArray.size();i++){
 				put.add(Bytes.toBytes(family), Bytes.toBytes(qualifierArray.get(i)),
-						Bytes.toBytes(qualifierArray.get(i)));
+						Bytes.toBytes(valueArray.get(i)));
 			}
-			
 			table.put(put);
 			System.out.println("insert recored " + rowKey + " to table "
 					+ tableName + " ok.");
@@ -227,6 +230,7 @@ public class Database {
 			table.put(putArray);
 			putArray.clear();
 		}
+		System.out.println("insert multi record finished");
 		table.close();
 	}
 	/*

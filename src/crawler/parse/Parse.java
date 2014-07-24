@@ -66,11 +66,11 @@ public class Parse {
 	}
 	/*
 	public static void main(String args[]) throws Exception{
-		Database.showAllRecord("Purl");
 		//Database.showAllRecord("url");
 
 		//Parse.parseMain(1);
+		Database.showAllRecord(CrawlerConfiguration.PageInfoTableName);
 	}
-	/*
+	
 	*/
 }

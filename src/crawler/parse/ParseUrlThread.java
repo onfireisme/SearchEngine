@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 import com.huaban.analysis.jieba.JiebaSegmenter;
 
 import crawler.Database.Database;
+import crawler.others.CrawlerConfiguration;
 import crawler.others.DebugFunctions;
 import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
@@ -28,20 +29,24 @@ public class ParseUrlThread implements Runnable {
 		try {
 			//第一步，获取page
 			String page=ParseModuleReadFromHbase.getPageFromHbase(url);
+			if(page==null||page.equals("")){
+				System.out.println("the page is null");
+				return;
+			}
 			//第二步，解析页面，获得相关数据
 			ArrayList<String>urlArray=ParsePage.getUrl(page);
 			ArrayList<String>imageUrlArray=ParsePage.getImageUrl(page);
+			System.out.println(ParsePage.getTitle(page));
 			ArrayList<String>keyWordArray=ExtractKeyWords.extractKeyWords(ParsePage.getTitle(page),
 					segmenter,tagger);
-			DebugFunctions.showArray(keyWordArray);
-			//DebugFunctions.showArray(urlArray);
-			//DebugFunctions.showArray(imageUrlArray);
-			/*
 			//存储数据
 			SaveParsedUrlToHbase.saveKeyWord(keyWordArray, url);
 			SaveParsedUrlToHbase.saveParsedUrl(urlArray);
 			SaveParsedUrlToHbase.saveParsedImageUrl(imageUrlArray);
 			SaveParsedUrlToHbase.saveAllToPageInfo(url, keyWordArray, urlArray, imageUrlArray);
+			//DebugFunctions.showArray(imageUrlArray);
+			/*
+			
 			*/
 			/*
 			SaveParsedUrlToHbase.saveParsedUrl(
@@ -53,33 +58,19 @@ public class ParseUrlThread implements Runnable {
 			e.printStackTrace();
 		}
 
-	}
+	}/*
 	public static void main(String args[]) throws Exception{
-		/*
 		JiebaSegmenter segmenter=ExtractKeyWords.getJiebaSegmenter();
 		MaxentTagger tagger=ExtractKeyWords.getMaxentTagger();
-		ParseUrlThread t=new ParseUrlThread("http://www.amazon.com",
-				segmenter,tagger);
-		ParseUrlThread t2=new ParseUrlThread("http://www.ask.com",
-				segmenter,tagger);
-		ParseUrlThread t3=new ParseUrlThread("http://www.msn.com",
-				segmenter,tagger);
-		ParseUrlThread t4=new ParseUrlThread("http://www.sina.com",
-				segmenter,tagger);
-		ParseUrlThread t5=new ParseUrlThread("http://www.taobao.com",
-				segmenter,tagger);
 		
-		t.run();
-		t2.run();
-		t3.run();
-		t4.run();
-		t5.run();
-		*/
-		//test();
-		//Database.showAllRecord("url");
 		
-		//ParseUrlThread temp=new ParseUrlThread("www.msn.com");
-		//temp.run();
-	}
+		//ParseUrlThread t=new ParseUrlThread("http://www.taobao.com",
+		//		segmenter,tagger);
+		//t.run();
+		//Database.showAllRecord(CrawlerConfiguration.PageInfoTableName);
+		Database.showAllRecord(CrawlerConfiguration.ParsedImageUrlTable);
+		//Database.showAllRecord(CrawlerConfiguration.ParsedUrlTableName);
+		//Database.showAllTable();
+	}*/
 
 }

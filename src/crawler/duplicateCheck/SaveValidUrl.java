@@ -186,6 +186,47 @@ public class SaveValidUrl {
 				
 	}
 	/*
+	 * 下面是存储valid image url到hbase
+	 */
+	public static void saveImageUrlToHbase(ArrayList<String> urlArray) throws Exception{
+		ArrayList<Integer> tableInfo= convertStringArrayToIntArray(Database.getSpecificQualifierRows(
+				CrawlerConfiguration.WaitingDownloadImageUrlMainTable , 
+				CrawlerConfiguration.WaitingDownloadImageUrlMainTableFamilyName,
+				CrawlerConfiguration.WaitingDownloadImageUrlMainTableQualifierName ));
+		ArrayList<Integer>assignMent=balanceUrlNumber(tableInfo, urlArray.size());
+		//then we need to store the data to hbase,depend on the assignment
+		int begin=0;
+		int end=assignMent.get(0)-1;
+		for(int i=0;i<assignMent.size();i++){
+			saveImageUrlToSecondaryTable(urlArray,begin,end,i+1,tableInfo.get(i)+assignMent.get(i));
+			begin=end+1;
+			if(i!=assignMent.size()-1){
+				end=end+assignMent.get(i+1);
+			}
+		}
+	}
+	public static void saveImageUrlToSecondaryTable(ArrayList<String>urlArray,
+			int begin,int end,int tableIndex,int newCount) throws Exception{
+		ArrayList<String>url=new ArrayList<String>();
+		ArrayList<String>temp=new ArrayList<String>();
+		for(int i=begin;i<=end;i++){
+			url.add(urlArray.get(i));
+			temp.add(CrawlerConfiguration.TempValue);
+		}
+
+		Database.addMultiRecords(CrawlerConfiguration.WaitingDownloadImageUrlTable+Integer.toString(tableIndex),
+				url, CrawlerConfiguration.TempFamilyName,
+				CrawlerConfiguration.TempQualifierName, 
+				temp);
+		//插入成功后，要记得修改hbase中相应的值呀！！
+		Database.addRecord(CrawlerConfiguration.WaitingDownloadImageUrlMainTable,
+				CrawlerConfiguration.WaitingDownloadImageUrlTable+Integer.toString(tableIndex)
+				, CrawlerConfiguration.WaitingDownloadUrlMainTableFamilyName
+				, CrawlerConfiguration.WaitingDownloadUrlMainTableQualifierName
+				, String.valueOf(newCount));
+				
+	}
+	/*
 	public static void main(String args[]) throws Exception{
 		//int temp[]={5,10,3,1,0,8,2,9,1,20,0,0,0,100,7,2,1,8,10,25};
 		//int temp[]={0,0,0,0,0};

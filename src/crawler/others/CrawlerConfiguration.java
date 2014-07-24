@@ -32,7 +32,6 @@ public class CrawlerConfiguration {
 	public static final String ImageTableFamilyName="c";
 	public static final String ImageTableQualifierName="";
 	
-	public static final String ImageUrlTable="Iurl";
 	
 	public static final String WaitingDownloadImageUrlMainTable="WDIMurl";
 	public static final String WaitingDownloadImageUrlMainTableFamilyName="tableInfo";
@@ -47,10 +46,10 @@ public class CrawlerConfiguration {
 	//图片解析模块
 	public static final String ParsedImageUrlTable="PIurl";
 	//
-	public static final String StatusFamilyName="status";
-	public static final String StatusQualifier="s";
-	public static final String ReadDefaultStatus="unread";
-	public static final String ReadStatus="read";
+	//public static final String StatusFamilyName="status";
+	//public static final String StatusQualifier="s";
+	//public static final String ReadDefaultStatus="unread";
+	//public static final String ReadStatus="read";
 	
 	public static final String TempFamilyName="t";
 	public static final String TempQualifierName="";

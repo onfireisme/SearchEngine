@@ -69,12 +69,14 @@ public class SaveParsedUrlToHbase {
 			qualifierArray.add(CrawlerConfiguration.PageInfoUrlQualifier);
 			valueArray.add(urlString);
 		}
+		
 		String imageUrlString="";
 		for(i=0;i<imageUrlArray.size();i++){
 			imageUrlString=imageUrlString+" "+imageUrlArray.get(i);
 			qualifierArray.add(CrawlerConfiguration.PageInfoImageUrlQualifier);
 			valueArray.add(imageUrlString);
 		}
+		
 		String keyWordString="";
 		for(i=0;i<keyWordArray.size();i++){
 			keyWordString=keyWordString+" "+keyWordArray.get(i);
@@ -87,11 +89,12 @@ public class SaveParsedUrlToHbase {
 	}
 	public static boolean isTableNameLegal(String tableName){
 		if(tableName==null||tableName.equals("")){
-			System.out.println("~~~~");
 			return false;
 		}
 		Pattern patt = Pattern.compile("^[a-zA-Z_0-9-.]+$");
         Matcher matcher = patt.matcher(tableName);
         return matcher.matches();
 	}
+		
+
 }
