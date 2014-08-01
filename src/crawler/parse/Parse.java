@@ -64,13 +64,11 @@ public class Parse {
 		 return new ThreadPoolExecutor(threadNumber, threadNumber,0L, TimeUnit.MILLISECONDS,   
 				new LinkedBlockingQueue<Runnable>());   
 	}
-	/*
 	public static void main(String args[]) throws Exception{
-		//Database.showAllRecord("url");
-
+		//Database.showAllRecord(CrawlerConfiguration.WaitingParseUrlTableName+"1");
 		//Parse.parseMain(1);
-		Database.showAllRecord(CrawlerConfiguration.PageInfoTableName);
+		Database.showAllTable();
+		//Database.showAllRecord(CrawlerConfiguration.WaitingParseUrlTableName+"1");
+		//Database.showAllRecord(CrawlerConfiguration.ParsedUrlTableName);
 	}
-	
-	*/
 }

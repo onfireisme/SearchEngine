@@ -35,6 +35,13 @@ public class SaveInitialUrlToHbase {
     	br.close();
     	return strArray;
 	}
+	public static void main(String args[]) throws Exception{
+		ArrayList<String> strArray=
+				SaveInitialUrlToHbase.readUrlFromTxt(CrawlerConfiguration.initialUrlTxtPath);
+		SaveValidUrl.saveValidUrlToHbase(strArray);
+		Database.showAllRecord(CrawlerConfiguration.WaitingDownloadUrlMainTableName);
+		Database.showAllRecord(CrawlerConfiguration.WaitingDownloadUrlTableName+"1");
+	}
 	/*
 	 * 这个函数用不上了，使用saveValidUrl中的存储函数
 	public static void saveToHbase(ArrayList<String>rowKeyArray) throws Exception{
@@ -53,9 +60,6 @@ public class SaveInitialUrlToHbase {
 		//ArrayList<String> strArray=
 		//		SaveInitialUrlToHbase.readUrlFromTxt(CrawlerConfiguration.initialUrlTxtPath);
 		//SaveValidUrl.saveValidUrlToHbase(strArray);
-		//SaveInitialUrlToHbase.saveToHbase(strArray);
-		Database.showAllRecord(CrawlerConfiguration.WaitingDownloadUrlMainTableName);
-		Database.showAllRecord("WDurl1");
 	}
 	*/
 }

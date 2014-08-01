@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import crawler.Database.Database;
+import crawler.others.ChineseToUtf8;
 import crawler.others.CrawlerConfiguration;
 import crawler.others.DebugFunctions;
 public class SaveParsedUrlToHbase {
@@ -41,14 +42,18 @@ public class SaveParsedUrlToHbase {
 	 * 这里假设传入的就是table应该有的名字
 	 * 如果是中文，就是
 	 */
-	public static void saveKeyWord(ArrayList<String> keyWordArray,String url) throws Exception{
+	public static void saveKeyWord(ArrayList<String> keyWordArray,
+			ArrayList<String>convertedKeyWordArray,String url
+			) throws Exception{
 		//每个keyword都创建一个table
 		String []tempArray={CrawlerConfiguration.TempFamilyName};
 		String tableName;
-		for(int i=0;i<keyWordArray.size();i++){
-			tableName=keyWordArray.get(i);
+		String realName;
+		for(int i=0;i<convertedKeyWordArray.size();i++){
+			tableName=convertedKeyWordArray.get(i);
+			realName=keyWordArray.get(i);
 			if(isTableNameLegal(tableName)){
-				Database.creatTable(tableName, tempArray);
+				Database.createTableAndAddToIndex(tableName, realName,tempArray);
 				Database.addRecord(tableName,
 						url, CrawlerConfiguration.TempFamilyName,
 						CrawlerConfiguration.TempQualifierName,

@@ -1,7 +1,9 @@
 package crawler.Database;
 import java.util.ArrayList;
 
-import crawler.others.CrawlerConfiguration;;
+import crawler.duplicateCheck.SaveValidUrl;
+import crawler.others.CrawlerConfiguration;
+import crawler.others.SaveInitialUrlToHbase;
 public class CreateTable {
 	public void downloadModuleTableInitial() throws Exception{
 		
@@ -35,17 +37,14 @@ public class CreateTable {
 		//image的下载模块，跟page下载是差不多的，不过是一个新的模块
 		//第一步，创建image表
 		String[]tempArray={CrawlerConfiguration.ImageTableFamilyName};
-		/*
 		Database.creatTable(CrawlerConfiguration.ImageTableName, tempArray);
 		//第二步，创建image waitingdownload url表，一个主表，然后几个子表
 		tempArray[0]=CrawlerConfiguration.WaitingDownloadImageUrlMainTableFamilyName;
 		Database.creatTable(CrawlerConfiguration.WaitingDownloadImageUrlMainTable,tempArray);
-		*/
 		tempArray[0]=CrawlerConfiguration.TempFamilyName;
 		for(int i=0;i<CrawlerConfiguration.WaitingDownloadImageUrlTableNumber;i++){
 			Database.creatTable(CrawlerConfiguration.WaitingDownloadImageUrlTable+Integer.toString(i+1),tempArray);
 		}
-		/*
 		//初始化 main table
 		ArrayList<String>rowKeyArray=new ArrayList<String>();
 		ArrayList<String>valueArray=new ArrayList<String>();
@@ -59,7 +58,6 @@ public class CreateTable {
 		//创建表来存储已经下载过的image url
 		tempArray[0]=CrawlerConfiguration.DownloadStatusFamilyName;
 		Database.creatTable(CrawlerConfiguration.DownloadedImageUrlTable, tempArray);
-		*/
 	}
 	public void imageParsedModuleInitial() throws Exception{
 		String[]tempArray={CrawlerConfiguration.DownloadStatusFamilyName};
@@ -87,6 +85,11 @@ public class CreateTable {
 		family[0]=CrawlerConfiguration.DownloadStatusFamilyName;
 		Database.creatTable(CrawlerConfiguration.UrlTableName, family);
 	}
+	public void keyWordTableIndex() throws Exception{
+		String[] family=new String[1];
+		family[0]=CrawlerConfiguration.KeyWordTableIndexFamily;
+		Database.creatTable(CrawlerConfiguration.KeyWordTableIndex, family);
+	}
 	public void createTable() throws Exception{
 		downloadModuleTableInitial();
 		imageDownloadInitial();
@@ -94,7 +97,7 @@ public class CreateTable {
 		parseModuleInitial();
 		webTableInitial();
 		urlTableIntial();
-
+		keyWordTableIndex();
 	}
 	
 	public void deleteWDmodule() throws Exception{
@@ -127,7 +130,15 @@ public class CreateTable {
 			Database.deleteTable(CrawlerConfiguration.WaitingDownloadImageUrlTable+String.valueOf(i+1));
 		}
 	}
-
+	public static void main(String args[]) throws Exception { 
+		/*
+		Database.deleteAllTable();
+		CreateTable ct=new CreateTable();
+		ct.createTable();
+		*/
+		Database.showAllTable();
+		//初始化下载列表
+	}
 	/*
 	public static void main(String args[]) throws Exception { 
 		CreateTable ct=new CreateTable();

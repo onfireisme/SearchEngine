@@ -78,7 +78,25 @@ public class Database {
 		}
 		admin.close();
 	}
-
+	public static void createTableAndAddToIndex(String tableName,
+			String realName, String[] familys) throws Exception{
+		HBaseAdmin admin = new HBaseAdmin(conf);
+		if (admin.tableExists(tableName)) {
+			System.out.println(tableName+"table already exists!");
+		} else {
+			HTableDescriptor tableDesc = new HTableDescriptor(tableName);
+			for (int i = 0; i < familys.length; i++) {
+				tableDesc.addFamily(new HColumnDescriptor(familys[i]));
+			}
+			admin.createTable(tableDesc);
+			System.out.println("create table " + tableName + " ok.");
+		}
+		admin.close();
+		//创建table完毕，要把相关数据添加到index中
+		Database.addRecord(CrawlerConfiguration.KeyWordTableIndex, tableName, 
+				CrawlerConfiguration.KeyWordTableIndexFamily,
+				CrawlerConfiguration.KeyWordTableIndexQualifier, realName);
+	}
 	/**
 	 * 删除表
 	 */
@@ -99,6 +117,18 @@ public class Database {
 		} catch (ZooKeeperConnectionException e) {
 			e.printStackTrace();
 		}
+	}
+	public static void deleteAllTable() throws IOException{
+		HBaseAdmin admin = new HBaseAdmin(conf);
+		String[]temp=admin.getTableNames();
+		for(int i=0;i<temp.length;i++){
+			if (admin.tableExists(temp[i])) {
+				admin.disableTable(temp[i]);
+				admin.deleteTable(temp[i]);
+				System.out.println("delete table " + temp[i] + " ok.");
+			}
+		}
+		admin.close();
 	}
 
 	/*
@@ -322,6 +352,11 @@ public class Database {
 	 */
 	public static ArrayList<String>getSpecificQualifierRows(String tableName,
 			int beginPosition,int endPosition,String familyName,String qualifier) throws IOException{
+		HBaseAdmin admin = new HBaseAdmin(conf);
+		if (!admin.tableExists(tableName)) {
+			admin.close();
+			return null;
+		}
 		ArrayList<String> result=new ArrayList<String>();
 		ArrayList<Result> resultArray=getSpecificRows(tableName, beginPosition, endPosition);
 		Cell cell;
@@ -330,6 +365,7 @@ public class Database {
 					Bytes.toBytes(qualifier));
 			result.add(new String(CellUtil.cloneValue(cell)));
 		}
+		admin.close();
 		return result;
 	}
 	public static ArrayList<String>getSpecificQualifierRows(String tableName,
@@ -382,6 +418,11 @@ public class Database {
 	 */
 	public static ArrayList<String> getSpecificRowKeys(
 			String tableName,int beginPosition,int endPosition) throws IOException{
+		HBaseAdmin admin = new HBaseAdmin(conf);
+		if (!admin.tableExists(tableName)) {
+			admin.close();
+			return null;
+		}
 		ArrayList<Result>resultArray=getSpecificRows(tableName, beginPosition, endPosition);
 		ArrayList<String> url=new ArrayList<String>();
 		Cell[] cell; 
@@ -391,6 +432,7 @@ public class Database {
 			urlString=Bytes.toString(CellUtil.cloneRow(cell[0]));
 			url.add(urlString);
 		}
+		admin.close();
 		return url;
 	}
 	/*

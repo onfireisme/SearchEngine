@@ -166,6 +166,18 @@ public class DuplicateCheck {
 		ss.close();
 		table.close();
 	}
+	public static void main(String args[]) throws Exception{
+		DuplicateCheck.copyImageUrlToParsedImageUrlTable();
+		DuplicateCheck.saveValidImageUrl();
+		Database.showAllRecord(CrawlerConfiguration.WaitingDownloadImageUrlMainTable);
+		/*
+		DuplicateCheck.copyUrlTableToParsedUrlTable();
+		DuplicateCheck.saveValidUrl();
+		 * 
+		 */
+		//Database.showAllRecord(CrawlerConfiguration.WaitingDownloadUrlMainTableName);
+		//Database.showAllRecord(CrawlerConfiguration.WaitingDownloadUrlTableName+"1");
+	}
 	/*
 	public static void main(String args[]) throws Exception{
 		//DuplicateCheck.saveValidUrl();

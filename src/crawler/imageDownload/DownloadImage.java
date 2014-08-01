@@ -75,9 +75,9 @@ public class DownloadImage {
 				new LinkedBlockingQueue<Runnable>());   
 	 }
 	 public static void main(String args[]) throws Exception{
-		// DownloadImage.downloadImage(1);
-		 Database.showAllRecord(CrawlerConfiguration.WaitingDownloadImageUrlTable+"1");
-		 Database.showAllRecord(CrawlerConfiguration.DownloadedImageUrlTable);
+		 DownloadImage.downloadImage(5);
+		 //Database.showAllRecord(CrawlerConfiguration.ImageTableName);
+		 //Database.showAllRecord(CrawlerConfiguration.WaitingDownloadImageUrlTable+"1");
+		 //Database.showAllRecord(CrawlerConfiguration.DownloadedImageUrlTable);
 	 }
-
 }

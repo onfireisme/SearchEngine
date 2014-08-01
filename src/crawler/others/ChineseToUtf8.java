@@ -48,6 +48,14 @@ public class ChineseToUtf8 {
 	    }
 	    return false;
 	}
+	public static boolean isAllEnglish(String str){
+		if(str==null||str.equals("")){
+			return false;
+		}
+		Pattern patt = Pattern.compile("^[a-zA-Z_0-9-.]+$");
+        Matcher matcher = patt.matcher(str);
+        return matcher.matches();
+	}
 	/*
 	public static void main(String args[]) throws Exception{
 		String str="你l";

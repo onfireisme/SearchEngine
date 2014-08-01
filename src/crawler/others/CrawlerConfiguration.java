@@ -28,7 +28,7 @@ public class CrawlerConfiguration {
 	public static final String PageInfoKeyWordQualifier="keyWord";
 	
 	//图片下载模块
-	public static final String ImageTableName="image";
+	public static final String ImageTableName="I";
 	public static final String ImageTableFamilyName="c";
 	public static final String ImageTableQualifierName="";
 	
@@ -63,6 +63,11 @@ public class CrawlerConfiguration {
 	public static final String DownloadStatusQualifier="";
 	public static final String DownloadedStatus="downloaded";
 	public static final String WaitingDownloadStatus="waitingDownload";
+	
+	//keyword table index相关信息
+	public static final String KeyWordTableIndex="KWIndex";
+	public static final String KeyWordTableIndexFamily="keyWord";
+	public static final String KeyWordTableIndexQualifier="";
 	
 	// 线程池线程的最大数目
 	public static final int ThreadPoolNumber=10;

@@ -22,7 +22,6 @@ import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
 public class ExtractKeyWords {
 	//由于每次，加载词典都需要很长时间，所以，把segmenter对象传入是个不错的选择。
-	public static final String regex="[-a-zA-Z0-9]";
 	public static ArrayList<String> getNounAndVerb(String sentence,
 			JiebaSegmenter segmenter) throws UnsupportedEncodingException {
 		
@@ -38,17 +37,26 @@ public class ExtractKeyWords {
 	    		result.add(word.getToken());
 	    	}
 	    }
-	    //我们现在获取了名词和动词，但是需要把他们转化成utf8 code才行
-	    for(int i=0;i<result.size();i++){
-	    	result.set(i,ChineseToUtf8.convertCnToUft8(result.get(i)));
-	    }
-	    //测试结果正确性
-	    /*
-	    for(int j=0;j<result.size();j++){
-	    	System.out.println(ChineseToUtf8.convertUtf8ToCn(result.get(j)));
-	    }
-	    */
 	    return result;
+	}
+	public static ArrayList<String> convertKeyWord(ArrayList<String> keyWord) throws UnsupportedEncodingException{
+		ArrayList<String>convertedKeyWord=new ArrayList<String>();
+		if(keyWord==null||keyWord.size()==0){
+			return convertedKeyWord;
+		}
+		System.out.println("lol");
+		if(ExtractKeyWords.isChinese(keyWord.get(0))){
+			for(int i=0;i<keyWord.size();i++){
+				convertedKeyWord.add(i,ChineseToUtf8.convertCnToUft8(keyWord.get(i)));
+		    }
+			return convertedKeyWord;
+		}
+		else{
+			if(ExtractKeyWords.isEnglish(keyWord.get(0))){
+				return keyWord;
+			}
+		}
+		return convertedKeyWord;
 	}
 	public static ArrayList<String> extractKeyWords(String sentence,JiebaSegmenter segmenter,
 			MaxentTagger tagger) throws UnsupportedEncodingException{
@@ -108,7 +116,11 @@ public class ExtractKeyWords {
 		}
 		return false;
 	}
-
+	public static void main(String args[]) throws Exception{
+		ArrayList<String>test=null;
+		//test.add("test");
+		convertKeyWord(test);
+	}
 	/*
 	public static void main(String args[]) throws Exception{
 		//String str = new String("暗示大家".getBytes(),"UTF-8");
